@@ -1,3 +1,17 @@
+pix=0
+
+class Node():
+    def __init__(self,pix,x,y,clr=0):
+        self.pix=pix
+        self.x=x*pix
+        self.y=y*pix
+        self.clr=clr
+        self.refresh()
+        
+    def refresh(self):
+        fill(self.clr)
+        rect(self.x,self.y,self.pix,self.pix)
+    
 Grid=list()
 antx=0
 anty=0
@@ -57,11 +71,15 @@ def setup():
     global antx
     global anty
     global Grid
+    global pix
     size(800,800)
-    Grid=[[ 0 for i in range(width)] for j in range(height)]
+    pix=10
+    x=80
+    y=80
+    Grid=[[Node(pix,i,j,color(0)) for i in range(y)] for j in range(x)]
     #print(Grid)
-    antx=400
-    anty=400
+    antx=40
+    anty=40
     dir=up
     #print(Grid)
     pixelDensity(1)
@@ -71,22 +89,23 @@ def draw():
     global anty
     global Grid
     global dir
-    loadPixels()
     for i in range(100):
-        antx=antx%width
-        anty=anty%height
+        antx=antx%(width/(pix))
+        anty=anty%(height/(pix))
     
-        if(Grid[antx][anty]==0):
+        if(Grid[antx][anty].clr==color(0)):
             turnRight()
+            Grid[antx][anty].clr=color(255)
+            Grid[antx][anty].refresh()
         else:
             turnLeft()
-        flip()
+            Grid[antx][anty].clr=color(0)
+            Grid[antx][anty].refresh()
         moveForward()
-    for i in range(width):
-        for j in range(height):
-            pix = i + width * j
-            if(Grid[i][j]==0):
-                pixels[pix] = color(255)
-            else:    
-                pixels[pix] = color(0)            
-    updatePixels()
+    # for i in range(width):
+    #     for j in range(height):
+    #         pix = i + width * j
+    #         if(Grid[i][j]==0):
+    #             pixels[pix] = color(255)
+    #         else:    
+    #             pixels[pix] = color(0)            
